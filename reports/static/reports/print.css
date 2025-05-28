@@ -1,0 +1,9 @@
+@media print {
+    button, .no-print {
+        display: none;
+    }
+    body {
+        font-size: 12pt;
+        background: white;
+    }
+}

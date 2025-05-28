@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Доступные шаблоны отчетов</h1>
+<ul>
+    {% for template in templates %}
+    <li>
+        <a href="{% url 'reports:view_report' template_id=template.id %}">
+            {{ template.name }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

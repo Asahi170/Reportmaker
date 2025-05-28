@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div style="white-space: pre-line; font-family: monospace; line-height: 2;">
+        {{ content }}
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Сгенерировать отчет</button>
+</form>
+
+<style>
+    .form-field {
+        display: inline;
+    }
+    .inline-select {
+        display: inline !important;
+        width: auto !important;
+        padding: 2px 5px !important;
+        height: auto !important;
+        margin: 0 3px !important;
+    }
+    .inline-number, .inline-text {
+        display: inline !important;
+        width: 100px !important;
+        padding: 2px 5px !important;
+        height: auto !important;
+        margin: 0 3px !important;
+    }
+</style>
+{% endblock %}

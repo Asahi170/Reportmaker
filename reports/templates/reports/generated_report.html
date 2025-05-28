@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ template.name }}</h1>
+<div style="white-space: pre-line; font-family: monospace; line-height: 2;">
+    {{ template.content|safe }}
+</div>
+{% endblock %}
