@@ -8,5 +8,28 @@
     <div class="container mt-4">
         {% block content %}{% endblock %}
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Обработка кнопки печати
+        document.querySelectorAll('[data-print]').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.print();
+            });
+        });
+
+        // Обработка формы для печати/PDF
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const pressedButton = document.activeElement;
+                if (pressedButton && pressedButton.name === 'print') {
+                    e.preventDefault();
+                    this.action = "{% url 'reports:print_report' template_id=0 %}".replace('0', this.dataset.templateId);
+                    this.submit();
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>

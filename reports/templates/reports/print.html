@@ -1,0 +1,37 @@
+{% if not content %}
+    <div class="alert alert-danger">
+        Ошибка: не найдены данные для печати.
+        <a href="{% url 'reports:view_report' template_id=template.id %}">Вернуться</a>
+    </div>
+{% else %}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>{{ template.name }} - Печать</title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; }
+            .header { text-align: center; margin-bottom: 20px; }
+            .report-title { font-size: 18pt; font-weight: bold; }
+            .report-content { white-space: pre-line; margin-top: 20px; }
+            @page { size: A4; margin: 10mm; }
+            @media print {
+                .no-print { display: none; }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="report-title">{{ template.name }}</div>
+        </div>
+
+        <div class="report-content">
+         {{ content|linebreaks }}
+        </div>
+
+        <div class="no-print" style="text-align: center; margin-top: 20px;">
+            <button onclick="window.print()" class="btn btn-primary">Печать</button>
+            <button onclick="window.close()" class="btn btn-secondary">Закрыть</button>
+        </div>
+    </body>
+    </html>
+{% endif %}

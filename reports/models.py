@@ -50,15 +50,29 @@ class ReportTemplate(models.Model):
     def generate_report(self, form_data):
         content = self.content
         for field in self.templatefield_set.all():
-            if field.field_type == 'select':
-                item = DictionaryItem.objects.get(
-                    id=form_data[field.placeholder],
-                    dictionary=field.dictionary
-                )
-                content = content.replace(f'{{{{{field.placeholder}}}}}', item.value)
-            else:
-                # Для числовых и текстовых полей просто подставляем значение
-                content = content.replace(f'{{{{{field.placeholder}}}}}', str(form_data[field.placeholder]))
+            try:
+                if field.field_type == 'select':
+                    if field.placeholder in form_data and field.dictionary:
+                        item = DictionaryItem.objects.get(
+                            id=form_data[field.placeholder],
+                            dictionary=field.dictionary
+                        )
+                        content = content.replace(f'{{{{{field.placeholder}}}}}', item.value)
+                elif field.field_type == 'date':
+                    if field.placeholder in form_data:
+                        date_value = form_data[field.placeholder]
+                        if isinstance(date_value, str):  # Если дата пришла как строка
+                            content = content.replace(f'{{{{{field.placeholder}}}}}', date_value)
+                        else:  # Если это объект date
+                            content = content.replace(f'{{{{{field.placeholder}}}}}', date_value.strftime('%d.%m.%Y'))
+                else:
+                    # Для числовых и текстовых полей просто подставляем значение
+                    if field.placeholder in form_data:
+                        content = content.replace(
+                            f'{{{{{field.placeholder}}}}}',
+                            str(form_data[field.placeholder]))
+            except (DictionaryItem.DoesNotExist, KeyError) as e:
+                content = content.replace(f'{{{{{field.placeholder}}}}}', '')
         return content
 
 
@@ -67,6 +81,7 @@ class TemplateField(models.Model):
         ('select', 'Выпадающий список'),
         ('number', 'Числовое поле'),
         ('text', 'Текстовое поле'),
+        ('date', 'Поле даты'),
     ]
 
     template = models.ForeignKey(ReportTemplate, on_delete=models.CASCADE)

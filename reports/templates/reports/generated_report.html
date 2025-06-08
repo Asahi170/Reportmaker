@@ -1,8 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>{{ template.name }}</h1>
-<div style="white-space: pre-line; font-family: monospace; line-height: 2;">
-    {{ template.content|safe }}
+<div class="report-container">
+    <div class="report-actions mb-3">
+        <button onclick="window.print()" class="btn btn-primary">Печать</button>
+        <a href="{% url 'reports:view_report' template_id=template.id %}" class="btn btn-secondary">Назад</a>
+    </div>
+
+    <div class="report-content">
+        <h1>{{ template.name }}</h1>
+        <div class="report-body" style="white-space: pre-line; font-family: monospace; line-height: 2;">
+            {{ content|linebreaks }}
+        </div>
+    </div>
 </div>
+
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        .report-content, .report-content * {
+            visibility: visible;
+        }
+        .report-content {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+        .report-actions {
+            display: none;
+        }
+    }
+</style>
 {% endblock %}
